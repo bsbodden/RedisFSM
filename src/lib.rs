@@ -20,4 +20,5 @@ fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
 //////////////////////////////////////////////////////
 
 redis_module! {
+  name: "fsm",
 }
