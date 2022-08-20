@@ -23,4 +23,6 @@ redis_module! {
   name: "fsm",
   version: 1,
   data_types: [],
+  commands: [
+  ],
 }
