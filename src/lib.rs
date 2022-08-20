@@ -14,4 +14,5 @@ fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
   let greet = format!("👋 Hello {}", src);
   let response = Vec::from(greet);
 
+  return Ok(response.into());
 }
