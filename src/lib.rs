@@ -24,5 +24,6 @@ redis_module! {
   version: 1,
   data_types: [],
   commands: [
+    ["fsm.create", fsm_create, "", 0, 0, 0],
   ],
 }
