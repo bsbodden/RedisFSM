@@ -11,4 +11,5 @@ fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
   }
 
   let src = args.into_iter().next_string()?;
+  let greet = format!("👋 Hello {}", src);
 }
