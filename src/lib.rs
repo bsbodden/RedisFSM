@@ -10,4 +10,5 @@ fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
     return Err(RedisError::WrongArity);
   }
 
+  let src = args.into_iter().next_string()?;
 }
