@@ -16,3 +16,6 @@ fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
 
   return Ok(response.into());
 }
+
+//////////////////////////////////////////////////////
+
