@@ -113,7 +113,8 @@ fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 
   guard!(let Ok(Some(fsm)) = redis_key.get_value::<StateMachine>(&REDIS_FSM_TYPE) else { return Err(RedisError::Str("ERR key not found")) });
 
-  return Ok(RedisValue::Null);
+  let json = serde_json::to_string(fsm)?;
+  return Ok(RedisValue::SimpleString(json));
 }
 
 //////////////////////////////////////////////////////
