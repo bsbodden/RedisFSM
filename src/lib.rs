@@ -56,13 +56,10 @@ pub static REDIS_FSM_TYPE: RedisType = RedisType::new(
 
 //////////////////////////////////////////////////////
 
-fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
-  let args = args.into_iter().skip(1);
-  let args_card = args.len();
-
-  if args_card > 1 {
-    return Err(RedisError::WrongArity);
-  }
+fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+  let mut args = args.into_iter().skip(1);
+  let key = args.next_arg()?;
+  let redis_key = ctx.open_key_writable(&key);
 
   let src = args.into_iter().next_string()?;
   let greet = format!("👋 Hello {}", src);
