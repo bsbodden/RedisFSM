@@ -41,7 +41,7 @@ pub static REDIS_FSM_TYPE: RedisType = RedisType::new(
     rdb_load: None,
     rdb_save: None,
     aof_rewrite: None,
-    free: None,
+    free: Some(free),
     mem_usage: None,
     digest: None,
     aux_load: None,
