@@ -6,6 +6,13 @@ use serde::{Deserialize, Serialize};
 //////////////////////////////////////////////////////
 
 #[derive(Serialize, Deserialize, Debug)]
+struct Event {
+  name: String,
+  from: Vec<String>,
+  to: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 struct StateMachine {
   name: String,
   prefix: String,
