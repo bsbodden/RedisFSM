@@ -1,6 +1,19 @@
 #[macro_use] extern crate redis_module;
 
 use redis_module::{Context, RedisError, RedisResult, RedisString, NextArg};
+use serde::{Deserialize, Serialize};
+
+//////////////////////////////////////////////////////
+
+#[derive(Serialize, Deserialize, Debug)]
+struct StateMachine {
+  name: String,
+  prefix: String,
+  field: String,
+  states: Vec<String>,
+}
+
+//////////////////////////////////////////////////////
 
 fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
   let args = args.into_iter().skip(1);
