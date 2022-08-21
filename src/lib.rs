@@ -1,6 +1,6 @@
 #[macro_use] extern crate redis_module;
 
-use redis_module::{Context, RedisError, RedisResult, RedisString, NextArg};
+use redis_module::{Context, RedisResult, RedisString, RedisValue, NextArg};
 use serde::{Deserialize, Serialize};
 use redis_module::native_types::RedisType;
 use redis_module::raw::RedisModuleTypeMethods;
@@ -98,12 +98,11 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   });
 
   let fsm: StateMachine = serde_json::from_str(&fsm_json.to_string())?;
-  redis_key.set_value(&REDIS_FSM_TYPE, fsm)?;
-  let src = args.into_iter().next_string()?;
-  let greet = format!("👋 Hello {}", src);
-  let response = Vec::from(greet);
-
-  return Ok(response.into());
+  if let Ok(_) = redis_key.set_value(&REDIS_FSM_TYPE, fsm) {
+    return Ok(RedisValue::Integer(true as i64));
+  } else {
+    return Ok(RedisValue::Integer(false as i64));
+  }
 }
 
 //////////////////////////////////////////////////////
