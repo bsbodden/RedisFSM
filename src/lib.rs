@@ -98,7 +98,7 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   });
 
   let fsm: StateMachine = serde_json::from_str(&fsm_json.to_string())?;
-
+  redis_key.set_value(&REDIS_FSM_TYPE, fsm)?;
   let src = args.into_iter().next_string()?;
   let greet = format!("👋 Hello {}", src);
   let response = Vec::from(greet);
