@@ -23,6 +23,10 @@ struct StateMachine {
 
 //////////////////////////////////////////////////////
 
+pub const REDIS_FSM_TYPE_NAME: &str = "Redis-FSM";
+
+//////////////////////////////////////////////////////
+
 fn fsm_create(_: &Context, args: Vec<RedisString>) -> RedisResult {
   let args = args.into_iter().skip(1);
   let args_card = args.len();
