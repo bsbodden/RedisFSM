@@ -18,6 +18,7 @@ struct StateMachine {
   prefix: String,
   field: String,
   states: Vec<String>,
+  events: Vec<Event>,
 }
 
 //////////////////////////////////////////////////////
