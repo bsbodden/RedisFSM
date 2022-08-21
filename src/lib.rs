@@ -4,6 +4,7 @@ use redis_module::{Context, RedisError, RedisResult, RedisString, NextArg};
 use serde::{Deserialize, Serialize};
 use redis_module::native_types::RedisType;
 use redis_module::raw::RedisModuleTypeMethods;
+use std::os::raw::c_void;
 
 //////////////////////////////////////////////////////
 
@@ -21,6 +22,10 @@ struct StateMachine {
   field: String,
   states: Vec<String>,
   events: Vec<Event>,
+}
+
+unsafe extern "C" fn free(value: *mut c_void) {
+  Box::from_raw(value.cast::<StateMachine>());
 }
 
 //////////////////////////////////////////////////////
