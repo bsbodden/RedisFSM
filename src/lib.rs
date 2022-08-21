@@ -127,5 +127,6 @@ redis_module! {
   ],
   commands: [
     ["fsm.create", fsm_create, "write", 1, 1, 1],
+    ["fsm.info", fsm_info, "readonly", 1, 1, 1],
   ],
 }
