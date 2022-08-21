@@ -106,6 +106,9 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 }
 
 fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+  let mut args = args.into_iter().skip(1);
+  let key = args.next_arg()?;
+
   return Ok(RedisValue::Null);
 }
 
