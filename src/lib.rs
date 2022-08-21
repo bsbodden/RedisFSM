@@ -1,6 +1,7 @@
 #[macro_use] extern crate redis_module;
+#[macro_use] extern crate guard;
 
-use redis_module::{Context, RedisResult, RedisString, RedisValue, NextArg};
+use redis_module::{Context, RedisResult, RedisString, RedisValue, RedisError, NextArg};
 use serde::{Deserialize, Serialize};
 use redis_module::native_types::RedisType;
 use redis_module::raw::RedisModuleTypeMethods;
@@ -109,6 +110,8 @@ fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   let mut args = args.into_iter().skip(1);
   let key = args.next_arg()?;
   let redis_key = ctx.open_key(&key);
+
+  guard!(let Ok(Some(fsm)) = redis_key.get_value::<StateMachine>(&REDIS_FSM_TYPE) else { return Err(RedisError::Str("ERR key not found")) });
 
   return Ok(RedisValue::Null);
 }
