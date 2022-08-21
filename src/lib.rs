@@ -110,7 +110,9 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 redis_module! {
   name: "fsm",
   version: 1,
-  data_types: [],
+  data_types: [
+    REDIS_FSM_TYPE
+  ],
   commands: [
     ["fsm.create", fsm_create, "", 0, 0, 0],
   ],
