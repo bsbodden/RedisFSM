@@ -105,6 +105,10 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   }
 }
 
+fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+  return Ok(RedisValue::Null);
+}
+
 //////////////////////////////////////////////////////
 
 redis_module! {
