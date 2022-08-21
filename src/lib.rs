@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use redis_module::native_types::RedisType;
 use redis_module::raw::RedisModuleTypeMethods;
 use std::os::raw::c_void;
+use serde_json::json;
 
 //////////////////////////////////////////////////////
 
@@ -60,6 +61,41 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   let mut args = args.into_iter().skip(1);
   let key = args.next_arg()?;
   let redis_key = ctx.open_key_writable(&key);
+
+  let fsm_json = json!({
+    "name": "JobFSM",
+    "prefix": "job:",
+    "field": "state",
+    "states": [
+      "sleeping",
+      "running",
+      "cleaning"
+    ],
+    "events": [
+      {
+        "name": "run",
+        "from": [
+          "sleeping"
+        ],
+        "to": "running"
+      },
+      {
+        "name": "clean",
+        "from": [
+          "running"
+        ],
+        "to": "cleaning"
+      },
+      {
+        "name": "sleep",
+        "from": [
+          "running",
+          "cleaning"
+        ],
+        "to": "sleeping"
+      }
+    ]
+  });
 
   let src = args.into_iter().next_string()?;
   let greet = format!("👋 Hello {}", src);
