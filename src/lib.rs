@@ -114,6 +114,6 @@ redis_module! {
     REDIS_FSM_TYPE
   ],
   commands: [
-    ["fsm.create", fsm_create, "", 0, 0, 0],
+    ["fsm.create", fsm_create, "write", 1, 1, 1],
   ],
 }
