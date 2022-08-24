@@ -56,6 +56,7 @@ pub static REDIS_FSM_TYPE: RedisType = RedisType::new(
 );
 
 //////////////////////////////////////////////////////
+const REDIS_FSM_HASH_NAME: &str = "Redis-FSM-Hash";
 
 fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   let mut args = args.into_iter().skip(1);
@@ -63,10 +64,11 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   let fsm: StateMachine = serde_json::from_str(&fsm_json.to_string())?;
   let key = RedisString::create(ctx.ctx, &fsm.name.to_string());
   let redis_key = ctx.open_key_writable(&key);
+  let prefix: &str = &fsm.prefix.clone();
 
   guard!(let Ok(_) = redis_key.set_value(&REDIS_FSM_TYPE, fsm) else { return Err(RedisError::Str("ERR could not persist state machine")) });
 
-  return Ok(RedisValue::Integer(false as i64));
+  return ctx.call("HSET", &[&REDIS_FSM_HASH_NAME, prefix, &key.to_string()]);
 }
 
 fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
