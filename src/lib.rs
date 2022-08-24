@@ -93,6 +93,7 @@ fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
   // split the key to get the prefix
   let key_parts: Vec<&str> = key.split(':').collect();
   guard!(let Some(prefix) = key_parts.into_iter().nth(0) else { return });
+  let key_prefix = &format!("{}:", prefix);
 }
 
 //////////////////////////////////////////////////////
