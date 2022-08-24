@@ -99,6 +99,9 @@ fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
   let key_name = RedisString::create(ctx.ctx, &fsm_key);
   let redis_key = ctx.open_key(&key_name);
   guard!(let Ok(Some(fsm)) = redis_key.get_value::<StateMachine>(&REDIS_FSM_TYPE) else { return });
+  if let Ok(RedisValue::Null) = ctx.call("HGET", &[&key.to_string(), &fsm.field]) {
+    // set the initial state of the hash if the field is null
+  }
 }
 
 //////////////////////////////////////////////////////
