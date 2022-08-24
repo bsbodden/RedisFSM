@@ -1,7 +1,7 @@
 #[macro_use] extern crate redis_module;
 #[macro_use] extern crate guard;
 
-use redis_module::{Context, RedisResult, RedisString, RedisValue, RedisError, NextArg};
+use redis_module::{Context, RedisResult, RedisString, RedisValue, RedisError, NextArg, NotifyEvent};
 use serde::{Deserialize, Serialize};
 use redis_module::native_types::RedisType;
 use redis_module::raw::RedisModuleTypeMethods;
@@ -80,6 +80,16 @@ fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 
   let json = serde_json::to_string(fsm)?;
   return Ok(RedisValue::SimpleString(json));
+}
+
+//////////////////////////////////////////////////////
+
+fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
+  let msg = format!(
+      "Received event: {:?} on key: {} via event: {}",
+      event_type, key, event
+  );
+  ctx.log_notice(msg.as_str());
 }
 
 //////////////////////////////////////////////////////
