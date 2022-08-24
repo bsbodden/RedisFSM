@@ -90,6 +90,8 @@ fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
       event_type, key, event
   );
   ctx.log_notice(msg.as_str());
+  // split the key to get the prefix
+  let key_parts: Vec<&str> = key.split(':').collect();
 }
 
 //////////////////////////////////////////////////////
