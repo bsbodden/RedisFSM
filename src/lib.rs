@@ -26,7 +26,9 @@ struct StateMachine {
 }
 
 impl StateMachine {
-
+  fn initial_state(&self) -> Option<&String> {
+    return self.states.first();
+  }
 }
 
 unsafe extern "C" fn free(value: *mut c_void) {
