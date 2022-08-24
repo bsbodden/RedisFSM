@@ -60,7 +60,7 @@ pub static REDIS_FSM_TYPE: RedisType = RedisType::new(
 
 fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   let mut args = args.into_iter().skip(1);
-  let key = args.next_arg()?;
+  let fsm_json = args.next_arg()?;
   let redis_key = ctx.open_key_writable(&key);
 
   let fsm_json = json!({
