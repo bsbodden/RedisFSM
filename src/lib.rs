@@ -95,6 +95,7 @@ fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
   guard!(let Some(prefix) = key_parts.into_iter().nth(0) else { return });
   let key_prefix = &format!("{}:", prefix);
   // need to find the correct fsm for the key prefix
+  guard!(let Ok(RedisValue::SimpleString(fsm_key)) = ctx.call("HGET", &[&REDIS_FSM_HASH_NAME, key_prefix]) else { return });
 }
 
 //////////////////////////////////////////////////////
