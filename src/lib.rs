@@ -64,11 +64,9 @@ fn fsm_create(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   let key = RedisString::create(ctx.ctx, &fsm.name.to_string());
   let redis_key = ctx.open_key_writable(&key);
 
-  if let Ok(_) = redis_key.set_value(&REDIS_FSM_TYPE, fsm) {
-    return Ok(RedisValue::Integer(true as i64));
-  } else {
-    return Ok(RedisValue::Integer(false as i64));
-  }
+  guard!(let Ok(_) = redis_key.set_value(&REDIS_FSM_TYPE, fsm) else { return Err(RedisError::Str("ERR could not persist state machine")) });
+
+  return Ok(RedisValue::Integer(false as i64));
 }
 
 fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
@@ -94,6 +92,7 @@ fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
   let key_parts: Vec<&str> = key.split(':').collect();
   guard!(let Some(prefix) = key_parts.into_iter().nth(0) else { return });
   let key_prefix = &format!("{}:", prefix);
+  // need to find the correct fsm for the key prefix
 }
 
 //////////////////////////////////////////////////////
