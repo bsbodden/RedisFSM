@@ -25,6 +25,10 @@ struct StateMachine {
   events: Vec<Event>,
 }
 
+impl StateMachine {
+
+}
+
 unsafe extern "C" fn free(value: *mut c_void) {
   Box::from_raw(value.cast::<StateMachine>());
 }
