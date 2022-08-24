@@ -107,6 +107,8 @@ fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
   guard!(let Ok(Some(fsm)) = redis_key.get_value::<StateMachine>(&REDIS_FSM_TYPE) else { return });
   if let Ok(RedisValue::Null) = ctx.call("HGET", &[&key.to_string(), &fsm.field]) {
     // set the initial state of the hash if the field is null
+    guard!(let Some(initial_state) = fsm.initial_state() else { return });
+    _ = ctx.call("HSET", &[&key.to_string(), &fsm.field, &initial_state]);
   }
 }
 
