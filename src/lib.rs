@@ -134,7 +134,8 @@ fn fsm_trigger(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 
   guard!(let Ok(Some(fsm)) = redis_key.get_value::<StateMachine>(&REDIS_FSM_TYPE) else { return Err(RedisError::Str("ERR key not found")) });
 
-  return Ok(RedisValue::Integer(false as i64));
+  let allowed = fsm.trigger(ctx, hash_key, event);
+  return Ok(RedisValue::Integer(allowed as i64));
 }
 
 //////////////////////////////////////////////////////
