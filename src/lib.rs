@@ -31,6 +31,9 @@ impl StateMachine {
   }
 
   fn allowed(&self, ctx: &Context, key: RedisString, fsm_event: RedisString) -> Option<&Event> {
+    // 1 - Load the Hash state field with HGET
+    guard!(let Ok(response) = ctx.call("HGET", &[&key.to_string(), &self.field]) else { return None });
+
     None
   }
 }
