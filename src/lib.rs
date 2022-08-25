@@ -36,8 +36,12 @@ impl StateMachine {
     // 2 - Find the event struct by name - in self.states
     guard!(let RedisValue::SimpleString(current_state) = response else { return None });
     guard!(let Some(event) = self.events.iter().find(|&e| e.name == fsm_event.to_string()) else { return None });
-
-    None
+    // 3 - If current state is in the "from" field, the transition is allowed, return the event to the caller
+    if event.from.iter().any(|from| from == &current_state) {
+      Some(event)
+    } else {
+      None
+    }
   }
 }
 
