@@ -88,6 +88,10 @@ fn fsm_info(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   return Ok(RedisValue::SimpleString(json));
 }
 
+fn fsm_allowed(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+  return Ok(RedisValue::Integer(false as i64));
+}
+
 //////////////////////////////////////////////////////
 
 fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
