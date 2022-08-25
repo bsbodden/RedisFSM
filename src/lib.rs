@@ -5,7 +5,9 @@ use redis_module::{Context, RedisResult, RedisString, RedisValue, RedisError, Ne
 use serde::{Deserialize, Serialize};
 use redis_module::native_types::RedisType;
 use redis_module::raw::RedisModuleTypeMethods;
-use std::os::raw::c_void;
+use std::os::raw::{c_int, c_void};
+use redis_module::raw;
+use std::{ffi::CString, ptr::null_mut};
 
 //////////////////////////////////////////////////////
 
@@ -56,6 +58,22 @@ unsafe extern "C" fn free(value: *mut c_void) {
   Box::from_raw(value.cast::<StateMachine>());
 }
 
+extern "C" fn rdb_load(rdb: *mut raw::RedisModuleIO, _encver: c_int) -> *mut c_void {
+  guard!(let Ok(data) = raw::load_string(rdb) else { return null_mut() });
+  let json_string = data.to_string();
+  let fsm: StateMachine = serde_json::from_str(&json_string.to_string()).unwrap();
+  return Box::into_raw(Box::new(fsm)).cast::<c_void>();
+}
+
+unsafe extern "C" fn rdb_save(rdb: *mut raw::RedisModuleIO, value: *mut c_void) {
+  let mut out = serde_json::Serializer::new(Vec::new());
+  let fsm = &*value.cast::<StateMachine>();
+  fsm.serialize(&mut out).unwrap();
+  let json = String::from_utf8(out.into_inner()).unwrap();
+  let cjson = CString::new(json).unwrap();
+  raw::save_string(rdb, cjson.to_str().unwrap());
+}
+
 //////////////////////////////////////////////////////
 
 pub const REDIS_FSM_TYPE_NAME: &str = "Redis-FSM";
@@ -66,8 +84,8 @@ pub static REDIS_FSM_TYPE: RedisType = RedisType::new(
   REDIS_FSM_TYPE_VERSION,
   RedisModuleTypeMethods {
     version: redis_module::TYPE_METHOD_VERSION,
-    rdb_load: None,
-    rdb_save: None,
+    rdb_load: Some(rdb_load),
+    rdb_save: Some(rdb_save),
     aof_rewrite: None,
     free: Some(free),
     mem_usage: None,
