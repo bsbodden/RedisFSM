@@ -118,6 +118,18 @@ fn fsm_allowed(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
   }
 }
 
+fn fsm_trigger(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+  let mut args = args.into_iter().skip(1);
+  let fsm_key = args.next_arg()?;
+  let redis_key = ctx.open_key(&fsm_key);
+  let hash_key = args.next_arg()?;
+  let event = args.next_arg()?;
+
+  guard!(let Ok(Some(fsm)) = redis_key.get_value::<StateMachine>(&REDIS_FSM_TYPE) else { return Err(RedisError::Str("ERR key not found")) });
+
+  return Ok(RedisValue::Integer(false as i64));
+}
+
 //////////////////////////////////////////////////////
 
 fn on_event(ctx: &Context, event_type: NotifyEvent, event: &str, key: &str) {
