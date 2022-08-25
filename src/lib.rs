@@ -174,6 +174,7 @@ redis_module! {
     ["fsm.create", fsm_create, "write", 1, 1, 1],
     ["fsm.info", fsm_info, "readonly", 1, 1, 1],
     ["fsm.allowed", fsm_allowed, "readonly", 1, 2, 1],
+    ["fsm.trigger", fsm_trigger, "write", 1, 2, 1],
   ],
   event_handlers: [
     [@HASH: on_event],
