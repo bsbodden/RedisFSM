@@ -33,6 +33,9 @@ impl StateMachine {
   fn allowed(&self, ctx: &Context, key: RedisString, fsm_event: RedisString) -> Option<&Event> {
     // 1 - Load the Hash state field with HGET
     guard!(let Ok(response) = ctx.call("HGET", &[&key.to_string(), &self.field]) else { return None });
+    // 2 - Find the event struct by name - in self.states
+    guard!(let RedisValue::SimpleString(current_state) = response else { return None });
+    guard!(let Some(event) = self.events.iter().find(|&e| e.name == fsm_event.to_string()) else { return None });
 
     None
   }
