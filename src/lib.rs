@@ -43,6 +43,13 @@ impl StateMachine {
       None
     }
   }
+
+  fn trigger(&self, ctx: &Context, key: RedisString, fsm_event: RedisString) -> bool {
+    let hash_key = &key.to_string();
+    guard!(let Some(event) = self.allowed(ctx, key, fsm_event) else { return false });
+    let hset_result = ctx.call("HSET", &[hash_key, &self.field, &event.to]);
+    return matches!(hset_result, Ok(_));
+  }
 }
 
 unsafe extern "C" fn free(value: *mut c_void) {
