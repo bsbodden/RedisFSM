@@ -29,6 +29,10 @@ impl StateMachine {
   fn initial_state(&self) -> Option<&String> {
     return self.states.first();
   }
+
+  fn allowed(&self, ctx: &Context, key: RedisString, fsm_event: RedisString) -> Option<&Event> {
+    None
+  }
 }
 
 unsafe extern "C" fn free(value: *mut c_void) {
